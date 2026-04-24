@@ -760,10 +760,10 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
     </ul>
     <div class="nav-right">
       <div class="socials">
-        <a href="https://linkedin.com/company/arvellabs" aria-label="LinkedIn" target="_blank" rel="noopener">
+        <a href="https://www.linkedin.com/company/113340958" aria-label="LinkedIn" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.95v5.66H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.36 4.25 5.43v6.31zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.23 0z"/></svg>
         </a>
-        <a href="https://x.com/arvaborat" aria-label="X" target="_blank" rel="noopener">
+        <a href="https://x.com/ArvelLabs" aria-label="X" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         </a>
       </div>
@@ -1076,12 +1076,12 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
     <div class="contact-inner">
       <div class="contact-info">
         <p>Tell us what you're building. We'll get back within one business day with a point of contact and next steps.</p>
-        <div class="item"><div class="k">Email</div><div class="v"><a href="/cdn-cgi/l/email-protection#84e7ebeaf0e5e7f0c4e5f6f2e1e8e8e5e6f7aae7ebe9"><span class="__cf_email__" data-cfemail="87e4e8e9f3e6e4f3c7e6f5f1e2ebebe6e5f4a9e4e8ea">[email&#160;protected]</span></a></div></div>
+        <div class="item"><div class="k">Email</div><div class="v"><a id="email-contact" href="#"></a></div></div>
         <div class="item"><div class="k">Studio</div><div class="v">Marina del Rey, California</div></div>
         <div class="item"><div class="k">Follow</div>
           <div class="v follow-links">
-            <a href="https://linkedin.com/company/arvellabs" target="_blank" rel="noopener">LinkedIn ↗</a>
-            <a href="https://x.com/arvaborat" target="_blank" rel="noopener">X / Twitter ↗</a>
+            <a href="https://www.linkedin.com/company/113340958" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a href="https://x.com/ArvelLabs" target="_blank" rel="noopener">X / Twitter ↗</a>
           </div>
         </div>
       </div>
@@ -1150,9 +1150,9 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
       <div class="footer-col">
         <h5>Connect</h5>
         <ul>
-          <li><a href="/cdn-cgi/l/email-protection#cdaea2a3b9acaeb98dacbfbba8a1a1acafbee3aea2a0"><span class="__cf_email__" data-cfemail="81e2eeeff5e0e2f5c1e0f3f7e4edede0e3f2afe2eeec">[email&#160;protected]</span></a></li>
-          <li><a href="https://linkedin.com/company/arvellabs" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="https://x.com/arvaborat" target="_blank" rel="noopener">X / Twitter</a></li>
+          <li><a id="email-footer-nav" href="#"></a></li>
+          <li><a href="https://www.linkedin.com/company/113340958" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://x.com/ArvelLabs" target="_blank" rel="noopener">X / Twitter</a></li>
         </ul>
       </div>
     </div>
@@ -1161,7 +1161,7 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
       <div class="l">
         <a href="privacy.html">Privacy Policy</a>
         <span class="divider">·</span>
-        <a href="/cdn-cgi/l/email-protection#24474b4a50454750644556524148484546570a474b49"><span class="__cf_email__" data-cfemail="b9dad6d7cdd8dacdf9d8cbcfdcd5d5d8dbca97dad6d4">[email&#160;protected]</span></a>
+        <a id="email-footer-bar" href="#"></a>
       </div>
       <div class="l" style="color:var(--cyan);">● LIVE · MARINA DEL REY</div>
     </div>
@@ -1170,7 +1170,7 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
 
 </div><!-- /.wrap -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ========== Nav scroll ========== */
 const nav = document.getElementById('nav');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 10));
@@ -1205,6 +1205,14 @@ document.querySelectorAll('.sol').forEach(card => {
 });
 
 /* ========== Form submission (AJAX to FormSubmit) ========== */
+(function(){
+  var u='contact',d='arvellabs.com',m='mailto:'+u+'@'+d,t=u+'@'+d;
+  ['email-contact','email-footer-nav','email-footer-bar','email-err'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.href=m;el.textContent=t;}
+  });
+})();
+
 document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.target;
@@ -1226,7 +1234,7 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
     }
   } catch (err) {
     status.classList.add('err');
-    status.innerHTML = 'Send failed. Email us directly at <a href="mailto:contact@arvellabs.com" style="color:inherit;text-decoration:underline;">contact@arvellabs.com</a>.';
+    status.innerHTML = 'Send failed. Email us directly at <a id="email-err" href="#" style="color:inherit;text-decoration:underline;"></a>.';
   }
 });
 
