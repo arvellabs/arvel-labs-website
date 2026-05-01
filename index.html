@@ -333,14 +333,14 @@
   .arlo-card {
     position: relative; overflow: hidden;
     border: 1px solid var(--line-2); border-radius: 20px;
-    padding: 72px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 60px;
+    padding: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
     align-items: center;
     background:
       radial-gradient(800px 500px at 100% -10%, rgba(255,176,87,0.12), transparent 60%),
       radial-gradient(600px 400px at 0% 110%, rgba(94,231,242,0.08), transparent 60%),
       linear-gradient(180deg, #0c111f, #070a12);
   }
-  @media (max-width: 1040px){ .arlo-card { grid-template-columns: 1fr; padding: 44px; gap: 40px; } }
+  @media (max-width: 1040px){ .arlo-card { grid-template-columns: 1fr; padding: 40px; gap: 36px; } }
   .arlo-card::before {
     content: ""; position: absolute; inset: 0;
     background:
@@ -393,23 +393,82 @@
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 6px; display: block; }
   .arlo-feats .f .v { font-family: var(--sans); font-size: 14px; color: var(--ink); }
 
-  /* Arlo phones visual */
-  .arlo-visual { position: relative; z-index: 2; display: flex; justify-content: center; perspective: 1200px; }
-  .phones { position: relative; width: 100%; max-width: 460px; height: 520px; }
-  .phone {
-    position: absolute; width: 220px; border-radius: 36px;
-    overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 40px 80px -30px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04),
-      0 0 60px rgba(255,176,87,0.12);
-    transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  /* Arlo phones visual — single phone with auto-rotating screens + tab indicators */
+  .arlo-visual { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
+  .phone-stage { display: grid; grid-template-columns: auto 1fr; gap: 36px; align-items: center; width: 100%; }
+  .phone-shell {
+    position: relative; width: 240px; aspect-ratio: 1 / 2.05;
+    border-radius: 38px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: #000;
+    box-shadow:
+      0 50px 100px -30px rgba(0,0,0,0.9),
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 0 80px rgba(255,176,87,0.18);
+    flex-shrink: 0;
   }
-  .phone img { width: 100%; display: block; }
-  .phone.p1 { top: 20px; left: 0; transform: rotate(-6deg); z-index: 2; }
-  .phone.p2 { top: 0; left: 50%; transform: translateX(-50%) rotate(0deg); z-index: 3; }
-  .phone.p3 { top: 20px; right: 0; transform: rotate(6deg); z-index: 2; }
-  .arlo-visual:hover .phone.p1 { transform: rotate(-10deg) translateX(-10px); }
-  .arlo-visual:hover .phone.p3 { transform: rotate(10deg) translateX(10px); }
-  .arlo-visual:hover .phone.p2 { transform: translateX(-50%) translateY(-10px); }
+  .phone-shell::before {
+    content: ""; position: absolute; inset: -1px; border-radius: 38px; pointer-events: none;
+    background: linear-gradient(155deg, rgba(255,255,255,0.18), transparent 40%, transparent 60%, rgba(255,176,87,0.18));
+    -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    padding: 1px; z-index: 3;
+  }
+  .phone-notch {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 88px; height: 22px; border-radius: 14px; background: #000; z-index: 4;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .phone-screen { position: absolute; inset: 0; overflow: hidden; }
+  .ph-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
+    opacity: 0; transform: scale(1.04);
+    transition: opacity .55s ease, transform .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .ph-img.active { opacity: 1; transform: scale(1); }
+
+  .phone-tabs { display: grid; gap: 6px; }
+  .pt-btn {
+    appearance: none; background: transparent; border: 0; cursor: pointer; text-align: left;
+    font: inherit; color: var(--ink-dim);
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+    padding: 14px 16px; border-radius: 8px;
+    border: 1px solid transparent;
+    transition: background .25s, border-color .25s, color .25s;
+    position: relative;
+  }
+  .pt-btn:hover { background: rgba(255,255,255,0.02); color: var(--ink); }
+  .pt-btn.active {
+    background: rgba(255,176,87,0.05);
+    border-color: rgba(255,176,87,0.18);
+    color: var(--ink);
+  }
+  .pt-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    color: var(--ink-mute); }
+  .pt-btn.active .pt-num { color: var(--orange); }
+  .pt-lbl { font-family: var(--sans); font-size: 15px; font-weight: 500; letter-spacing: -0.005em; }
+  .pt-bar {
+    grid-column: 1 / -1; height: 2px; background: rgba(255,255,255,0.05);
+    border-radius: 2px; overflow: hidden; margin-top: 8px;
+  }
+  .pt-bar span {
+    display: block; height: 100%; width: 0;
+    background: linear-gradient(90deg, var(--orange), #ffd28a);
+  }
+  .pt-btn.active .pt-bar span { animation: ptFill 5.5s linear forwards; }
+  @keyframes ptFill { from { width: 0; } to { width: 100%; } }
+
+  @media (max-width: 1040px){
+    .phone-stage { grid-template-columns: auto 1fr; gap: 28px; }
+    .phone-shell { width: 220px; }
+  }
+  @media (max-width: 560px){
+    .phone-stage { grid-template-columns: 1fr; gap: 24px; justify-items: center; }
+    .phone-tabs { width: 100%; max-width: 320px; }
+    .phone-shell { width: 200px; border-radius: 32px; }
+    .phone-shell::before { border-radius: 32px; }
+  }
 
   /* floating orange sparkles behind phones */
   .sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
@@ -903,7 +962,7 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
           </div>
         </div>
         <h3 class="arlo-headline">Give Arlo the chaos. <em>Keep the day.</em></h3>
-        <p>Arlo connects to Gmail, captures tasks from your voice or any forwarded email, and sorts everything into three lists&mdash;Now, Next, and Later. No inbox guilt. No system to maintain. Just what actually needs you today.</p>
+        <p>Most days, the hard part isn't doing the work. It's figuring out which work. Arlo handles that. It reads your inbox, hears your voice, catches every forwarded thought, and decides what's urgent today, what's coming up, and what can wait. You stop sorting. You start moving.</p>
         <div class="arlo-cta">
           <a href="https://sendarlo.com" target="_blank" rel="noopener" class="btn btn-orange">Visit Arlo <span class="arr">&rarr;</span></a>
           <a href="#contact" class="btn btn-ghost">Talk to the team <span class="arr">&rarr;</span></a>
@@ -916,10 +975,22 @@ document.querySelectorAll('[data-resource-id]').forEach(meta => {
       </div>
 
       <div class="arlo-visual">
-        <div class="phones">
-          <div class="phone p1"><img src="assets/arlo-catchup.png" alt="Arlo Catch Up" /></div>
-          <div class="phone p2"><img src="assets/arlo-today.png" alt="Arlo Today" /></div>
-          <div class="phone p3"><img src="assets/arlo-evening.png" alt="Arlo Evening Briefing" /></div>
+        <div class="phone-stage">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <img class="ph-img active" data-idx="0" src="assets/arlo-home.png" alt="Arlo Home" />
+              <img class="ph-img"        data-idx="1" src="assets/arlo-briefing.png" alt="Arlo Working Late Briefing" />
+              <img class="ph-img"        data-idx="2" src="assets/arlo-ask.png" alt="Ask Arlo" />
+              <img class="ph-img"        data-idx="3" src="assets/arlo-catchup-new.png" alt="Arlo Catch Up" />
+            </div>
+            <div class="phone-notch"></div>
+          </div>
+          <div class="phone-tabs">
+            <button class="pt-btn active" data-jump="0"><span class="pt-num">01</span><span class="pt-lbl">Home</span><span class="pt-bar"><span></span></span></button>
+            <button class="pt-btn"        data-jump="1"><span class="pt-num">02</span><span class="pt-lbl">Daily Briefing</span><span class="pt-bar"><span></span></span></button>
+            <button class="pt-btn"        data-jump="2"><span class="pt-num">03</span><span class="pt-lbl">Ask Arlo</span><span class="pt-bar"><span></span></span></button>
+            <button class="pt-btn"        data-jump="3"><span class="pt-num">04</span><span class="pt-lbl">Catch Up</span><span class="pt-bar"><span></span></span></button>
+          </div>
         </div>
       </div>
     </div>
@@ -1237,6 +1308,43 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
     status.innerHTML = 'Send failed. Email us directly at <a id="email-err" href="#" style="color:inherit;text-decoration:underline;"></a>.';
   }
 });
+
+/* ========== Arlo phone carousel ========== */
+(function phoneCarousel(){
+  const imgs = document.querySelectorAll('.ph-img');
+  const btns = document.querySelectorAll('.pt-btn');
+  if (!imgs.length) return;
+  let idx = 0;
+  let timer = null;
+  const DUR = 5500;
+  function show(n){
+    idx = ((n % imgs.length) + imgs.length) % imgs.length;
+    imgs.forEach((el, i) => el.classList.toggle('active', i === idx));
+    btns.forEach((el, i) => {
+      el.classList.remove('active');
+      // force reflow on bar so animation restarts
+      const bar = el.querySelector('.pt-bar span');
+      if (bar) { bar.style.animation = 'none'; bar.offsetWidth; bar.style.animation = ''; }
+    });
+    if (btns[idx]) btns[idx].classList.add('active');
+  }
+  function start(){
+    stop();
+    timer = setInterval(() => show(idx + 1), DUR);
+  }
+  function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+  btns.forEach(b => b.addEventListener('click', () => {
+    show(parseInt(b.dataset.jump, 10));
+    start();
+  }));
+  // pause on hover of phone shell
+  const stage = document.querySelector('.phone-stage');
+  if (stage) {
+    stage.addEventListener('mouseenter', stop);
+    stage.addEventListener('mouseleave', start);
+  }
+  start();
+})();
 
 /* ========== About live core ========== */
 (function aboutCore(){
